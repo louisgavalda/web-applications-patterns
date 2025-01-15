@@ -1,6 +1,6 @@
 annotated-types==0.7.0
 asgiref==3.8.1
-black==24.8.0
+black==24.10.0
 Brotli==1.1.0
 click==8.1.7
 dj-database-url==2.2.0
