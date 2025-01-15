@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar with tags -->
+      <div
+
+      <!-- Main content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div
+          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1>Notes</h1>
+          <a href="{% url 'note_create' %}" class="btn btn-primary">New Note</a>
+        </div>
+
+        <!-- Search bar -->
+        <form class="mb-4">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ query|default:'' }}">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+          </div>
+        </form>
+
+        <!-- Notes list -->
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          {% for note in notes %}
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">{{ note.title }}</h5>
+                  <p class="card-text text-muted">
+                    Updated on {{ note.updated_at|date:"d/m/Y H:i" }}
+                  </p>
+                  <div class="mb-2">
+                    {% for tag in note.tags.all %}
+                      <span class="badge bg-secondary">{{ tag.name }}</span>
+                    {% endfor %}
+                  </div>
+                  <a href="{% url 'note_detail' note.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-12 text-center">
+              <p class="text-muted">No notes found</p>
+            </div>
+          {% endfor %}
+        </div>
+      </main>
+    </div>
+  </div>
+{% endblock %}

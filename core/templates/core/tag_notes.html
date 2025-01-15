@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Notes with the tag "{{ tag.name }}"</h2>
+      <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for note in notes %}
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ note.title }}</h5>
+              <p class="card-text text-muted">
+                Updated on {{ note.updated_at|date:"d/m/Y H:i" }}
+              </p>
+              <div class="mb-2">
+                {% for tag in note.tags.all %}
+                  <span class="badge bg-secondary">{{ tag.name }}</span>
+                {% endfor %}
+              </div>
+              <a href="{% url 'note_detail' note.id %}" class="btn btn-sm btn-outline-primary">View</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center">
+          <p class="text-muted">No notes found with this tag</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

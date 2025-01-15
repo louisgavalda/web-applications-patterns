@@ -16,6 +16,7 @@ from pathlib import Path
 
 import dj_database_url
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,10 +33,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # https://docs.djangoproject.com/en/5.1/ref/settings/#std-setting-SECRET_KEY
 # https://devcenter.heroku.com/articles/config-vars
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    default=secrets.token_urlsafe(nbytes=64),
+# SECREdT_KEY = os.environ.get(
+#     "DJANGO_SECRET_KEY",
+#     default=secrets.token_urlsafe(nbytes=64),
+# )
+SECRET_KEY = (
+    "django-insecure-54bdf4402ef98f337e7c8bb9ed8705417027ef8677ad4b51278f0dbc9a5bcdd6"
 )
+
 
 # The `DYNO` env var is set on Heroku CI, but it's not a real Heroku app, so we have to
 # also explicitly exclude CI:
@@ -55,6 +60,11 @@ if IS_HEROKU_APP:
 else:
     ALLOWED_HOSTS = [".localhost", "127.0.0.1", "[::1]", "0.0.0.0"]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # URL of the Svelte app
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
 # Application definition
 
@@ -67,6 +77,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "django_browser_reload",
     "userauth",
     "core",
@@ -74,6 +85,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     # Django doesn't support serving static assets in a production-ready way, so we use the
     # excellent WhiteNoise package to do so instead. The WhiteNoise middleware must be listed
     # after Django's `SecurityMiddleware` so that security redirects are still performed.

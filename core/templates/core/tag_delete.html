@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body text-center">
+            <h3 class="card-title">Delete the tag</h3>
+            <p class="card-text">
+              Are you sure you want to delete the tag "{{ tag.name }}"?
+              {% if tag.notes.count > 0 %}
+                <br>
+                <strong>Warning:</strong> This tag is used by {{ tag.notes.count }} note(s).
+              {% endif %}
+            </p>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Delete</button>
+              <a href="{% url 'tag_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

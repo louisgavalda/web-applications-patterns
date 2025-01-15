@@ -44,7 +44,7 @@ pip install -r requirements.txt
 # Generate database migration files (based on model changes)
 ./manage.py makemigrations
 # Create an admin user account with the specified (dummy) email
-./manage.py createsuperuser --email user@example.com
+./manage.py createsuperuser --email user@example.com  # password
 # Start the Django development server in debug mode
 DEBUG=1 ./manage.py runserver
 ```

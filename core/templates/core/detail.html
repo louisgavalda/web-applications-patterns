@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">{{ note.title }}</h1>
+                    <div class="mb-3">
+                        {% for tag in note.tags.all %}
+                        <span class="badge bg-secondary">{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="text-muted small mb-3">
+                        Créé le {{ note.created_at|date:"d/m/Y H:i" }}
+                        {% if note.updated_at != note.created_at %}
+                        <br>Modifié le {{ note.updated_at|date:"d/m/Y H:i" }}
+                        {% endif %}
+                    </div>
+                    <div class="card-text markdown-content">
+                        {{ note.content|linebreaks }}
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'note_edit' note.id %}" class="btn btn-primary">Modifier</a>
+                        <a href="{% url 'note_delete' note.id %}" class="btn btn-danger">Supprimer</a>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Retour</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

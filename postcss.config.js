@@ -1,6 +1,7 @@
 module.exports = {
   plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
+    // Svelte does not like the folowwing plugins, I don't know why.
+    // tailwindcss: {},
+    // autoprefixer: {},
   },
 };
