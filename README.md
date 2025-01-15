@@ -11,7 +11,7 @@
 - Have fun.
 
 And more precisely, we are going to build:
-- a **Django** web application for... 🥁 books management.
+- a **Django** web application for... 🥁 taking notes.
 - a **REST API** (using Django Ninja) on top of our Django application.
 - a basic **SPA** (using Svelte) for consuming content from our API.
 
@@ -43,6 +43,7 @@ source ./venv/bin/activate
 pip install -r requirements.txt
 # Generate database migration files (based on model changes)
 ./manage.py makemigrations
+# Run the migrations in order to apply changes to the database; it gets created if it does not exist
 # Create an admin user account with the specified (dummy) email
 ./manage.py createsuperuser --email user@example.com  # password
 # Start the Django development server in debug mode
@@ -142,7 +143,7 @@ Example with the Python [Django](https://www.djangoproject.com/) framework which
 We will draw inspiration from the famous [Django tutorial](https://docs.djangoproject.com/en/5.1/intro/tutorial01/).
 Read the first part of the tutorial, and maybe the beginning of the [second one](https://docs.djangoproject.com/en/5.1/intro/tutorial02/) if you're curious.
 
-We will create an app for... 🥁 books management.
+We will create an app for... 🥁 taking notes.
 
 ### See also
 
@@ -152,7 +153,99 @@ We will create an app for... 🥁 books management.
 
 ### What?
 
-_To be discussed during the course._
+Following is a practical explanation of what a [REST](https://en.wikipedia.org/wiki/REST) [API](https://en.wikipedia.org/wiki/API) is (using our notes application as an example):
+
+A **REST API** (Representational State Transfer Application Programming Interface) is a way for your frontend (i.e. Svelte) to communicate with your backend (i.e. Django) through HTTP requests.
+Think of it as a contract between frontend and backend that defines how they exchange data.
+
+Here are the key concepts applied to our notes taking app:
+
+#### Resources and Endpoints
+```
+Your data entities become URLs (endpoints):
+- /api/notes/         → all notes
+- /api/notes/42/      → specific note with ID 42
+- /api/tags/          → all tags
+```
+
+#### HTTP Methods (CRUD operations)
+```
+Each endpoint supports specific operations:
+GET     /api/notes/      → Retrieve all notes
+POST    /api/notes/      → Create a new note
+GET     /api/notes/42/   → Retrieve note 42
+PUT     /api/notes/42/   → Update note 42
+DELETE  /api/notes/42/   → Delete note 42
+```
+
+#### Request/Response Format (usually JSON)
+```json
+// GET /api/notes/42/
+{
+    "id": 42,
+    "title": "My Note",
+    "content": "Some content",
+    "tags": [
+        {"id": 1, "name": "work"},
+        {"id": 2, "name": "important"}
+    ],
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+}
+```
+
+#### Query Parameters (for filtering/sorting)
+```
+GET /api/notes/?search=python     → Search notes containing "python"
+GET /api/notes/?tag=work          → Filter notes with "work" tag
+GET /api/notes/?sort=updated_at   → Sort notes by update date
+```
+
+#### Status Codes (response outcomes)
+```
+200 OK            → Request successful
+201 Created       → New note created successfully
+400 Bad Request   → Invalid data sent
+404 Not Found     → Note doesn't exist
+500 Server Error  → Something went wrong on the server
+```
+
+#### Example Frontend Usage (Svelte)
+```javascript
+// Fetching all notes
+async function getNotes() {
+    const response = await fetch('/api/notes/');
+    const notes = await response.json();
+}
+
+// Creating a new note
+async function createNote(noteData) {
+    const response = await fetch('/api/notes/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(noteData)
+    });
+    const newNote = await response.json();
+}
+```
+
+**Key Benefits**:
+- Stateless: Each request contains all needed information
+- Cacheable: Responses can be cached for performance
+- Uniform Interface: Consistent way to handle all resources
+- Client-Server Separation: Frontend and backend can evolve independently
+
+**Best Practices**:
+- Use plural nouns for resources (/notes/ not /note/)
+- Nest related resources logically (/notes/42/tags/)
+- Use query parameters for filtering/sorting
+- Return appropriate status codes
+- Include error messages in responses
+- Version your API if needed (/api/v1/notes/)
+
+This structure allows your Svelte frontend to interact with your Django backend in a standardized, predictable way, making it easier to develop and maintain your application.
 
 ### Why?
 
@@ -164,7 +257,7 @@ We will use [Django Ninja](https://django-ninja.dev/) to add a REST to our Djang
 
 See the [Django Ninja tutorial](https://django-ninja.dev/tutorial/).
 Django Ninja is already installed, you don't need to take care of that.
-Simply draw inspiration from the [CRUD example](https://django-ninja.dev/tutorial/other/crud/) and try to adapt it for our books management application.
+Simply draw inspiration from the [CRUD example](https://django-ninja.dev/tutorial/other/crud/) and try to adapt it for our notes taking application.
 
 ## Single Page Application (SPA)
 
