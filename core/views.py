@@ -18,10 +18,8 @@ def home(request):
 
 
 def notes_list_partial(request):
-    search = request.GET.get("search", "")
-    notes = Note.objects.filter(
-        Q(title__icontains=search) | Q(content__icontains=search)
-    )
+    query = request.GET.get("q", "")
+    notes = Note.objects.filter(title__icontains=query)
     return render(request, "core/partials/notes_list.html", {"notes": notes})
 
 
