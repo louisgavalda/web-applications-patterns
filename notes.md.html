@@ -4,7 +4,8 @@ rel="icon"
 href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Ctext%20x='0'%20y='14'%3E🛠️%3C/text%3E%3C/svg%3E"
 type="image/svg+xml"
 />
-# Web Applications Patterns
+
+**Web Applications Patterns**
   Web Applications Patterns course @ [EPITA](https://www.epita.fr/) / January 2025
   with [Louis Gavalda](https://www.linkedin.com/in/louis-gavalda/).
 
@@ -131,16 +132,14 @@ The **Controller** mediates between the Model and View.
 6. Controller selects and updates the appropriate View
 7. Updated View is presented to the user
 
+### Why?
+
 This separation of concerns leads to:
 - More maintainable code
 - Easier debugging
 - Better code organization
 - Simpler testing
 - Enhanced scalability
-
-### Why?
-
-_To be discussed during the course._
 
 ### How?
 
@@ -216,7 +215,7 @@ GET /api/notes/?sort=updated_at   → Sort notes by update date
 500 Server Error  → Something went wrong on the server
 ```
 
-#### Example Frontend Usage (Svelte)
+**Example Frontend Usage (Svelte):**
 ```javascript
 // Fetching all notes
 async function getNotes() {
@@ -237,13 +236,7 @@ async function createNote(noteData) {
 }
 ```
 
-__Key Benefits__:
-- Stateless: Each request contains all needed information
-- Cacheable: Responses can be cached for performance
-- Uniform Interface: Consistent way to handle all resources
-- Client-Server Separation: Frontend and backend can evolve independently
-
-__Best Practices__:
+**Best Practices**:
 - Use plural nouns for resources (/notes/ not /note/)
 - Nest related resources logically (/notes/42/tags/)
 - Use query parameters for filtering/sorting
@@ -251,11 +244,15 @@ __Best Practices__:
 - Include error messages in responses
 - Version your API if needed (/api/v1/notes/)
 
-This structure allows your Svelte frontend to interact with your Django backend in a standardized, predictable way, making it easier to develop and maintain your application.
+This structure allows your Svelte frontend to interact with our Django backend in a standardized, predictable way, making it easier to develop and maintain our application.
 
 ### Why?
 
-_To be discussed during the course._
+**Key Benefits**:
+- Stateless: Each request contains all needed information
+- Cacheable: Responses can be cached for performance
+- Uniform Interface: Consistent way to handle all resources
+- Client-Server Separation: Frontend and backend can evolve independently
 
 ### How?
 
@@ -268,38 +265,396 @@ Simply draw inspiration from the [CRUD example](https://django-ninja.dev/tutoria
 ## Single Page Application (SPA)
 
 ### What?
+
+A **Single Page Application** is a web application that loads a single HTML page and dynamically updates content as the user interacts with it, without requiring full page reloads.
+This creates a more fluid, desktop-like experience.
+
 ### Why?
+
+**Key characteristics of a SPA:**
+
+- Client-side routing
+- Dynamic content loading
+- Smooth transitions
+- State management
+- Reduced server load
+- _Better_ user experience
+
+
 ### How?
 
-We will use [Svelte](https://svelte.dev/) (with [SvelteKit](https://kit.svelte.dev/)) to build a SPA for our notes taking application.
+**A few examples of popular SPA frameworks/libraries:**
 
-Execute these commands in your terminal in order to install and run the Django app:
+1. **React**
+   - Created by Facebook
+   - Uses Virtual DOM
+   - Large ecosystem
+   - Popular features: Hooks, JSX
+```jsx
+function App() {
+  const [count, setCount] = useState(0)
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  )
+}
+```
+
+2. **Vue.js**
+   - Progressive framework
+   - Gentle learning curve
+   - Two-way data binding
+   - Template-based
+```vue
+<template>
+  <div>
+    <p>{{ count }}</p>
+    <button @click="increment">Increment</button>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { count: 0 }
+  },
+  methods: {
+    increment() {
+      this.count++
+    }
+  }
+}
+</script>
+```
+
+3. **Svelte**
+   - Compile-time framework
+   - No virtual DOM
+   - Less boilerplate
+   - Smaller bundle size
+```svelte
+<script>
+  let count = 0
+
+  function increment() {
+    count += 1
+  }
+</script>
+
+<p>{count}</p>
+<button on:click={increment}>
+  Increment
+</button>
+```
+
+4. **Angular**
+   - Full-featured framework by Google
+   - TypeScript-based
+   - Comprehensive tooling
+   - Built-in dependency injection
+```typescript
+@Component({
+  selector: 'app-counter',
+  template: `
+    <p>{{count}}</p>
+    <button (click)="increment()">Increment</button>
+  `
+})
+export class CounterComponent {
+  count = 0;
+
+  increment() {
+    this.count++;
+  }
+}
+```
+
+5. **Solid.js**
+   - React-like syntax
+   - Fine-grained reactivity
+   - Very performant
+   - Small bundle size
+```jsx
+function Counter() {
+  const [count, setCount] = createSignal(0);
+
+  return (
+    <>
+      <p>{count()}</p>
+      <button onClick={() => setCount(c => c + 1)}>
+        Increment
+      </button>
+    </>
+  );
+}
+```
+
+**Key Considerations When Choosing a Framework:**
+
+- Learning curve
+- Community size
+- Performance requirements
+- Bundle size
+- Development experience
+- Available tooling
+- Team expertise
+- Project scale
+- SEO requirements
+
+Each framework has its strengths, and the choice often depends on specific project requirements, team expertise, and business needs.
+
+---
+
+For our project we will use [Svelte](https://svelte.dev/) (with [SvelteKit](https://kit.svelte.dev/)) to build a SPA for our notes taking application.
+
+Execute these commands in your terminal in order to install and run the Svelte application:
 ```bash
+# Access the Svelte project directory.
 cd svelte-app
 # Install the JavaScript/Node dependencies.
 npm install
-# Run the Svelte app in local.
+# Run the Svelte app using the development server.
 npm run dev
 ```
+
 
 ## Observer Pattern
 
 ### What?
+
+The **Observer Pattern** is a behavioral design pattern that establishes a one-to-many relationship between objects, where when one object (the **Subject**/**Observable**) changes state, all its dependents (**Observers**) are notified and updated automatically.
+It's particularly useful for implementing distributed event handling systems.
+
+**Core Components:**
+
+1. **Subject/Observable**: The object holding the state and maintaining a list of observers
+2. **Observer**: The object that wants to be notified of changes
+
+**Real-world Example:**
+
+Think of it like a YouTube channel subscription:
+- The YouTube channel is the Subject
+- Subscribers are the Observers
+- When a new video is posted (state change), all subscribers get notified
+
+**Modern Implementation Examples:**
+
+1. **React's useState Hook:**
+```typescript
+const [state, setState] = useState(initialState);
+// Components re-render (observe) when state changes
+```
+
+2. **RxJS Observables:**
+```typescript
+const observable = new Observable(subscriber => {
+    subscriber.next('Hello');
+    subscriber.next('World');
+});
+
+observable.subscribe(value => console.log(value));
+```
+
+3. **EventEmitter in Node.js:**
+```typescript
+const eventEmitter = new EventEmitter();
+eventEmitter.on('event', data => console.log(data));
+eventEmitter.emit('event', 'Something happened!');
+```
+
+The Observer Pattern is particularly relevant in modern web development where **real-time** updates and **reactive programming** are common requirements.
+It's the foundation for many modern frameworks and libraries (like RxJS, for React) that handle state management and UI updates.
+
 ### Why?
+
+**Common Use Cases:**
+- Real-time data updates in UI components
+- Event handling systems
+- Message broadcasting
+- Stock market updates
+- Push notifications
+- Chat applications
+- Live data monitoring
+
+**Benefits:**
+1. Loose coupling between subjects and observers
+2. Support for broadcast communication
+3. Dynamic relationships can be established at runtime
+4. Good for establishing real-time event handling
+
+**Considerations:**
+1. Memory leaks if observers aren't properly detached
+2. Order of notification isn't guaranteed
+3. Cascade of updates can occur if not managed properly
+4. Potential performance impact with many observers
+
 ### How?
+
+Here's a simple dummy implementation in TypeScript:
+
+```typescript
+// Observer interface
+interface Observer {
+    update(data: any): void;
+}
+
+// Subject interface
+interface Subject {
+    attach(observer: Observer): void;
+    detach(observer: Observer): void;
+    notify(data: any): void;
+}
+
+// Concrete Subject
+class NewsAgency implements Subject {
+    private observers: Observer[] = [];
+
+    attach(observer: Observer): void {
+        if (!this.observers.includes(observer)) {
+            this.observers.push(observer);
+        }
+    }
+
+    detach(observer: Observer): void {
+        const index = this.observers.indexOf(observer);
+        if (index !== -1) {
+            this.observers.splice(index, 1);
+        }
+    }
+
+    notify(data: any): void {
+        for (const observer of this.observers) {
+            observer.update(data);
+        }
+    }
+
+    publishNews(news: string): void {
+        console.log(`Publishing news: ${news}`);
+        this.notify(news);
+    }
+}
+
+// Concrete Observer
+class NewsSubscriber implements Observer {
+    private name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+
+    update(data: string): void {
+        console.log(`${this.name} received news: ${data}`);
+    }
+}
+```
+
 ### See also
 
+- [Observer Pattern](https://www.patterns.dev/vanilla/observer-pattern/)
 - [Observer pattern](https://refactoring.guru/design-patterns/observer)
 
 ## Microservices
 
 ### What?
+
+A monolithic application (like our typical Django app) is structured as a single, unified codebase where all functionality - user authentication, business logic, database operations, file handling, etc. - lives together.
+Think of it as a large building where all departments work under one roof.
+
+For example, in a Django e-commerce site:
+- All code runs as one process
+- A single database handles all data
+- Components are tightly coupled
+- Scaling requires replicating the entire application
+- Simpler to develop and deploy initially
+
+In contrast, a microservices architecture breaks down the application into smaller, independent services that each handle a specific business function.
+Each service:
+- Runs as its own process
+- Can use its own database
+- Communicates with other services via APIs (usually REST or gRPC)
+- Can be scaled independently
+- Can be written in different programming languages
+
+For example, an e-commerce site using microservices might have:
+- An authentication service managing users
+- A product catalog service
+- An order processing service
+- A payment service
+- A shipping service
+
 ### Why?
+
+Each of these would run independently, with its own codebase and database, communicating through well-defined interfaces.
+
+This provides better scalability and flexibility, but increases operational complexity and requires more sophisticated deployment and monitoring solutions.
+
+Here is a detailed breakdown of the advantages, disadvantages, and main tools for microservices architecture.
+
+**Advantages:**
+1. Fine-grained scalability: Each service can be scaled independently according to its needs
+2. Technological flexibility: Freedom to choose the best technology for each service
+3. Resilience: A service failure doesn't affect the entire system
+4. Independent deployment: Updates possible service by service
+5. Team organization: Each team can be autonomous with their service
+
+**Disadvantages:**
+1. Increased operational complexity: More elements to manage and coordinate
+2. Higher cost: More complex infrastructure, more servers
+3. More difficult debugging: Issues can involve multiple services
+4. Data consistency: Challenge to maintain consistency between services
+5. Network latency: Inter-service communication adds latency
+
+See this article from 2021: [10 Companies Using Microservices. Who is Using Them?](https://codeandpepper.com/companies-using-microservices/)
+
 ### How?
+
+Commonly used tools when building a microservices architecture are:
+
+1. **Containerization and Orchestration:**
+   - Docker for containerization
+   - Kubernetes for orchestration
+   - Docker Compose for local development
+
+2. **Service Discovery and Configuration:**
+   - Consul or Eureka for service discovery
+   - etcd or ZooKeeper for distributed configuration
+   - Spring Cloud Config for configuration management
+
+3. **Communication:**
+   - REST or gRPC for APIs
+   - RabbitMQ, Kafka for asynchronous messaging
+   - GraphQL for API aggregation
+
+4. **Monitoring and Observability:**
+   - Prometheus for metrics collection
+   - Grafana for visualization
+   - Jaeger or Zipkin for distributed tracing
+   - ELK Stack (Elasticsearch, Logstash, Kibana) for logs
+
+5. **CI/CD:**
+   - Jenkins, GitLab CI, or GitHub Actions
+   - ArgoCD or Flux for GitOps
+   - Helm for Kubernetes packaging
+
+6. **Gateway and Security:**
+   - Kong or Traefik for API Gateway
+   - Keycloak or Auth0 for authentication
+   - Vault for secrets management
+
+7. **Testing:**
+   - Pact for contract testing
+   - Gatling or K6 for load testing
+   - Chaos Monkey for resilience testing
 
 ## Extra reading
 
+- [Patterns.dev](https://www.patterns.dev/)
 - [Catalog of Patterns of Enterprise Application Architecture](https://martinfowler.com/eaaCatalog/index.html)
 - [Anti-pattern](https://en.wikipedia.org/wiki/Anti-pattern)
+
 
 <!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://morgan3d.github.io/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
