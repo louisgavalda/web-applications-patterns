@@ -19,7 +19,9 @@ def home(request):
 
 def notes_list_partial(request):
     query = request.GET.get("q", "")
-    notes = Note.objects.filter(title__icontains=query)
+    tag_name = request.GET.get("tag", "")
+    tag = get_object_or_404(Tag, name=tag_name)
+    notes = tag.notes.filter(title__icontains=query)
     return render(request, "core/partials/notes_list.html", {"notes": notes})
 
 

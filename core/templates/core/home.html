@@ -9,10 +9,15 @@
           <ul class="nav flex-column">
             {% for tag in tags %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'tag_notes' tag.name %}">
+                <button
+                  class="nav-link"
+                  href="{% url 'tag_notes' tag.name %}"
+                  hx-get="http://127.0.0.1:8000/notes?tag={{ tag.name }}"
+                  hx-target="#notes-list"
+                >
                   {{ tag.name }}
                   <span class="badge bg-secondary">{{ tag.notes.count }}</span>
-                </a>
+                </button>
               </li>
             {% endfor %}
           </ul>
