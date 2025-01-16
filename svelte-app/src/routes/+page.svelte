@@ -9,7 +9,10 @@
     let error = null;
 
     // TODO: Filter notes based on searchQuery and selectedTag
-    $: filteredNotes = notes;
+    $: filteredNotes = notes.filter(note =>
+        note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        note.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     // TODO: Implement the fetchNotes function
     async function fetchNotes() {
@@ -31,7 +34,10 @@
     // TODO: Implement the fetchTags function
     async function fetchTags() {
         try {
-            // Add code to fetch tags
+            const response = await fetch('http://127.0.0.1:8000/api/tags/');
+            if (response.ok) {
+                tags = await response.json();
+            }
         } catch (err) {
             console.error('Failed to fetch tags:', err);
         }
@@ -64,7 +70,7 @@
                     <!-- TODO: Implement the tags list with selection handling -->
                     {#each tags as tag}
                         <li class="nav-item">
-                            <!-- Add the tag button/link here -->
+                            {tag.name} <a href="#">x</a>
                         </li>
                     {/each}
                 </ul>
@@ -84,6 +90,7 @@
                     type="text"
                     class="form-control"
                     placeholder="Search notes..."
+                    bind:value={searchQuery}
                 />
             </div>
 
@@ -103,7 +110,15 @@
                     <!-- TODO: Implement the notes grid -->
                     {#each filteredNotes as note (note.id)}
                         <div class="col">
-                            <!-- Add the note card here -->
+                            <div class="card">
+                              <div class="card-body">
+                                <h5 class="card-title">{ note.title }</h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary">{ note.created_at }</h6>
+                                <p class="card-text">{ note.content }</p>
+                                <a href="#" class="card-link">Delete</a>
+                                <a href="#" class="card-link">Update</a>
+                              </div>
+                            </div>
                         </div>
                     {/each}
                 </div>

@@ -17,6 +17,14 @@ def home(request):
     )
 
 
+def notes_list_partial(request):
+    search = request.GET.get("search", "")
+    notes = Note.objects.filter(
+        Q(title__icontains=search) | Q(content__icontains=search)
+    )
+    return render(request, "core/partials/notes_list.html", {"notes": notes})
+
+
 def note_detail(request, note_id):
     note = get_object_or_404(Note, id=note_id)
     return render(request, "core/detail.html", {"note": note})

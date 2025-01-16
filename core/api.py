@@ -47,14 +47,19 @@ class ErrorSchema(Schema):
     message: str
 
 
-# Endpoints Notes
+# Below are the definitions of the endpoints of our API.
+
+
 @api.get("/notes/", response=List[NoteSchema])
 def list_notes(request, search: str | None = None, tag: str | None = None):
     queryset = Note.objects.all()
 
     if search:
         queryset = queryset.filter(
-            Q(title__icontains=search) | Q(content__icontains=search)
+            Q(title__icontains=search)
+            | Q(
+                content__icontains=search
+            )  # Concise way for specifying complex conditions using the Django ORM.
         )
 
     if tag:
